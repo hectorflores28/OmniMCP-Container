@@ -3,12 +3,22 @@ import httpx
 import os
 import json
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables from .env file
 load_dotenv()
 
 # 1. Initialize MCP with a name
 mcp = FastMCP("OmniMCP-Container")
+
+# CORS
+if hasattr(mcp, "_app") and mcp._app:
+    mcp._app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # 2. Tool: Web Search (Placeholder for Tavily or DuckDuckGo)
 @mcp.tool()
