@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # 1. THE BRAIN: Local Inference with Ollama
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: always
+    volumes:
+      - ./ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    deploy:
+      resources:
+        reservations:
+          # Enable GPU support if available (optional)
+          # devices:
+          #   - driver: nvidia
+          #     count: 1
+          #     capabilities: [gpu]
+          devices: []
+
+  # 2. THE BRIDGE: Python MCP Service (FastMCP)
+  ai-bridge:
+    build: .
+    container_name: ai-bridge
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - HOST=0.0.0.0
+      - PORT=8000
+    volumes:
+      - ./my_project_files:/data  # Mount your project code here
+    depends_on:
+      - ollama
+
+volumes:
+  # Named volume for persistent storage of models
+  # Update: Local folder used to keep project self-contained
+  ollama_data:
