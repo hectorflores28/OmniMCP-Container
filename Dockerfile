@@ -20,5 +20,6 @@ EXPOSE 8000
 # Run the MCP server
 # Note: Host must be set to 0.0.0.0 for container access
 # The fastmcp library's .run() usually respects MCP_HOST or similar,
-# but can be explicitly set in the app.py if needed.
-CMD ["python", "app.py"]
+# CMD ["python", "app.py", "--transport", "sse", "--host", "[IP_ADDRESS]", "--port", "8000"]
+
+CMD ["python", "app.py", "--sse"]

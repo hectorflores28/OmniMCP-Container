@@ -1,23 +1,22 @@
 from fastmcp import FastMCP
+from fastapi import Request # For direct SSE message handling
+from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import os
 import json
 from dotenv import load_dotenv
-from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Inicializar MCP
+# 1. Inicializar FastMCP
 mcp = FastMCP("OmniMCP-Container")
 
-# Configurar CORS de forma segura
-
-# Forzamos la creación de la app de FastAPI interna
+# Forzamos la creación de la app de FastAPI interna definiendo una herramienta dummy
 @mcp.tool()
-def _init_app(): pass # Truco para asegurar que la app se inicialice
+def _init_mcp(): pass
 
-# Aplicamos los permisos directamente
+# 2. Configurar CORS y soporte de conexión directa
 if hasattr(mcp, "_app") and mcp._app:
     mcp._app.add_middleware(
         CORSMiddleware,
@@ -25,6 +24,12 @@ if hasattr(mcp, "_app") and mcp._app:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # 🛠️ SOPORTE DIRECTO PARA ANTIGRAVITY:
+    # Capturamos POST a /sse para reenviarlos al gestor de mensajes de MCP
+    @mcp._app.post("/sse")
+    async def sse_post_handler(request: Request):
+        return await mcp._app.handlers.get("post_messages")(request)
 
 
 # 2. Tool: Web Search (Placeholder for Tavily or DuckDuckGo)
@@ -80,10 +85,20 @@ async def fetch_private_data(endpoint: str) -> str:
             return f"Error fetching private data: {str(e)}"
     return "Error: Unexpected end of function."
 
+# --- REEMPLAZA EL FINAL DE app.py CON ESTO ---
 if __name__ == "__main__":
-    # Expose as an API (Server-Sent Events) for other apps/clients to use.
-    # We fetch host and port from environment variables, defaulting to 0.0.0.0 and 8000.
-    host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "8000"))
+    import sys
+
+    # 1. Si enviamos --sse (como hace el Dockerfile), abrimos el PUERTO 8000
+    if "--sse" in sys.argv:
+        host = os.getenv("HOST", "0.0.0.0")
+        port = int(os.getenv("PORT", "8000"))
+        # El print ayuda a depurar, pero para SSE debe ir ANTES de arrancar el servidor
+        print(f"🚀 Iniciando servidor SSE en {host}:{port}")
+        mcp.run(transport="sse", host=host, port=port)
     
-    mcp.run(transport="sse", host=host, port=port)
+    # 2. Si NO hay argumentos (como hace Antigravity), usamos el modo CONSOLA
+    else:
+        # IMPORTANTE: En modo stdio NO debemos imprimir nada extra a la consola 
+        # o romperemos el JSON de comunicación con Antigravity.
+        mcp.run(transport="stdio")

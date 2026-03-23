@@ -1,0 +1,8 @@
+.git
+.gitignore
+ollama_data/
+my_project_files/
+.env
+README.md
+NOTAS.md
+*.md

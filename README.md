@@ -1,5 +1,9 @@
 # OmniMCP-Container 🚀
 
+![Docker Process](/public/docker_ollama_omni_container.png)
+![FastMCP](/public/fastmcp_server.png)
+![MCP on IDE](/public/mcp_on_ide.png)
+
 A containerized Model Context Protocol (MCP) bridge for local and external LLMs. This project provides a robust, extensible hub that allows you to use your local models (via Ollama) or cloud models while giving them access to your local filesystem and web search tools.
 
 ## 🌟 Key Features
