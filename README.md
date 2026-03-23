@@ -1,6 +1,6 @@
 # OmniMCP-Container 🚀
 
-![Docker Process](/public/docker_ollama_omni_container.png)
+![Docker Process](/public/docker_process.png)
 ![FastMCP](/public/fastmcp_server.png)
 ![MCP on IDE](/public/mcp_on_ide.png)
 
