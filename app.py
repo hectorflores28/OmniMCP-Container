@@ -8,12 +8,14 @@ from fastapi.middleware.cors import CORSMiddleware
 # Load environment variables from .env file
 load_dotenv()
 
-# 1. Initialize MCP with a name
-mcp = FastMCP("OmniMCP-Container")
+# Inicializar MCP
+app = mcp.flask_app if hasattr(mcp, "flask_app") else None
 
-# CORS
-if hasattr(mcp, "_app") and mcp._app:
-    mcp._app.add_middleware(
+if not app and hasattr(mcp, "_app"):
+    app = mcp._app
+
+if app:
+    app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
         allow_methods=["*"],
