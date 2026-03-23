@@ -9,18 +9,23 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 # Inicializar MCP
-app = mcp.flask_app if hasattr(mcp, "flask_app") else None
+mcp = FastMCP("OmniMCP-Container")
 
-if not app and hasattr(mcp, "_app"):
-    app = mcp._app
+# Configurar CORS de forma segura
 
-if app:
-    app.add_middleware(
+# Forzamos la creación de la app de FastAPI interna
+@mcp.tool()
+def _init_app(): pass # Truco para asegurar que la app se inicialice
+
+# Aplicamos los permisos directamente
+if hasattr(mcp, "_app") and mcp._app:
+    mcp._app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
 
 # 2. Tool: Web Search (Placeholder for Tavily or DuckDuckGo)
 @mcp.tool()
