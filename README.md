@@ -61,3 +61,6 @@ To use this as an MCP server in Claude Desktop, add this to your `claude_desktop
 
 ## 🛠️ Customizing Tools
 Add new tools in `app.py` by using the `@mcp.tool()` decorator.
+
+## 📄 Licencia
+Este proyecto está bajo la Licencia MIT - mira el archivo [LICENSE](LICENSE) para detalles.
