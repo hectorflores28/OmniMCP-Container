@@ -1,5 +1,8 @@
 # OmniMCP-Container 🚀
 
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 ![Docker Process](/public/docker_process.png)
 ![FastMCP](/public/fastmcp_server.png)
 ![MCP on IDE](/public/mcp_on_ide.png)
