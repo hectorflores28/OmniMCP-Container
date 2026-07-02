@@ -1,4 +1,4 @@
-# OmniMCP-Container 🚀
+# MCP-Template 🚀
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
@@ -8,6 +8,13 @@
 ![MCP on IDE](/public/mcp_on_ide.png)
 
 A containerized Model Context Protocol (MCP) bridge for local and external LLMs. This project provides a robust, extensible hub that allows you to use your local models (via Ollama) or cloud models while giving them access to your local filesystem and web search tools.
+
+---
+
+web_search mocked
+fetch_private_data using api.example.com
+
+---
 
 ## 🌟 Key Features
 - **Local Inference**: Integrated Ollama service for running models locally (no internet required).
